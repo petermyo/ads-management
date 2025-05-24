@@ -11,13 +11,6 @@ const corsHeaders = {
 };
 
 
-// functions/api/index.js
-export async function onRequest(context) {
-  return new Response(JSON.stringify({ message: "Hello from Pages Function API!" }), {
-    headers: { "Content-Type": "application/json" }
-  });
-}
-
 // Handle OPTIONS requests for CORS preflight
 function handleOptions(request) {
     if (request.headers.get("Origin") !== null &&
