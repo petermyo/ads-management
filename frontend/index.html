@@ -53,7 +53,7 @@
                 <div class="text-2xl font-bold text-indigo-300 mr-8">
                     Ads Dashboard
                 </div>
-                <ul class="flex space-x-4">
+                <ul class="flex space-x-4" v-if="isLoggedIn">
                     <li>
                         <a href="/" @click.prevent="navigate('/')"
                            :class="{'bg-gray-700 text-indigo-300': currentPath === '/', 'hover:bg-gray-700': currentPath !== '/'}"
@@ -98,7 +98,11 @@
             </div>
 
             <div class="relative">
-                <button @click="toggleProfileDropdown" class="flex items-center text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full p-2 hover:bg-gray-700 transition-colors duration-200">
+                <button v-if="!isLoggedIn" @click="showLoginModal = true"
+                        class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                    Login
+                </button>
+                <button v-else @click="toggleProfileDropdown" class="flex items-center text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full p-2 hover:bg-gray-700 transition-colors duration-200">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="ml-2 font-medium">Admin</span>
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" :class="{'rotate-180': isProfileDropdownOpen}"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -106,8 +110,7 @@
 
                 <div v-if="isProfileDropdownOpen" @click.away="isProfileDropdownOpen = false"
                      class="absolute right-0 mt-2 w-48 bg-gray-700 rounded-lg shadow-xl py-2 z-10 origin-top-right animate-fade-in-down">
-                    <a href="#" @click.prevent="signIn" class="block px-4 py-2 text-sm text-white hover:bg-gray-600">Sign In</a>
-                    <a href="#" @click.prevent="signOut" class="block px-4 py-2 text-sm text-white hover:bg-gray-600">Sign Out</a>
+                    <a href="#" @click.prevent="handleLogout" class="block px-4 py-2 text-sm text-white hover:bg-gray-600">Sign Out</a>
                     <a href="#" @click.prevent="settings" class="block px-4 py-2 text-sm text-white hover:bg-gray-600">Settings</a>
                 </div>
             </div>
@@ -116,7 +119,8 @@
         <main class="flex-1 p-8 overflow-auto">
             <component :is="currentView"
                        :open-confirm-modal="openConfirmModal"
-                       :api-base-url="API_BASE_URL">
+                       :api-base-url="API_BASE_URL"
+                       :session-token="sessionToken">
             </component>
         </main>
 
@@ -135,19 +139,54 @@
             </div>
         </div>
 
+        <div v-if="showLoginModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Login to Dashboard</h2>
+                <form @submit.prevent="handleLogin">
+                    <div class="mb-4">
+                        <label for="login-username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+                        <input type="text" id="login-username" v-model="loginForm.username" required
+                               class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div class="mb-6">
+                        <label for="login-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                        <input type="password" id="login-password" v-model="loginForm.password" required
+                               class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <p v-if="loginError" class="text-red-600 text-center mb-4">{{ loginError }}</p>
+                    <div class="flex items-center justify-between">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                            Login
+                        </button>
+                        <button type="button" @click="showLoginModal = false; loginError = null" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        const { createApp, ref, reactive, computed, onMounted } = Vue;
+        const { createApp, ref, reactive, computed, onMounted, watch } = Vue;
 
         // Global API Base URL
         const API_BASE_URL = "/api"; // Cloudflare Pages Functions are routed under /api
+
+        // Helper to generate UUID for session token (simple, for demo)
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
 
         // --- Component Definitions ---
 
         // Dashboard Component
         const DashboardComponent = {
-            props: ['apiBaseUrl'],
+            props: ['apiBaseUrl', 'sessionToken'],
             setup(props) {
                 const ads_data = ref([]);
                 const loading_ads_data = ref(true);
@@ -157,7 +196,7 @@
                     loading_ads_data.value = true;
                     ads_data_error.value = null;
                     try {
-                        // Using opensheet.elk.sh for Google Sheet data
+                        // Using opensheet.elk.sh for Google Sheet data (no auth needed for this external API)
                         const response = await fetch('https://opensheet.elk.sh/11qE_Bl0vm4viCfvvPKQDh6zMHWJZZNoXqWN-fvaDb50/sheet1');
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
@@ -233,7 +272,7 @@
 
         // Users Component
         const UsersComponent = {
-            props: ['apiBaseUrl', 'openConfirmModal'], // Receive openConfirmModal from parent
+            props: ['apiBaseUrl', 'openConfirmModal', 'sessionToken'], // Receive sessionToken
             setup(props) {
                 const users_table = reactive([]);
                 const loading_users = ref(false);
@@ -251,7 +290,15 @@
                     loading_users.value = true;
                     users_error.value = null;
                     try {
-                        const response = await fetch(`${props.apiBaseUrl}/users`);
+                        const response = await fetch(`${props.apiBaseUrl}/users`, {
+                            headers: {
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            }
+                        });
+                        if (response.status === 401) { // Unauthorized
+                            users_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to fetch users');
@@ -295,9 +342,16 @@
                     try {
                         const response = await fetch(url, {
                             method: method,
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            },
                             body: JSON.stringify(userForm)
                         });
+                        if (response.status === 401) {
+                            users_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to save user');
@@ -312,7 +366,6 @@
 
                 function confirmDeleteUser(id) {
                     itemToDeleteId.value = id;
-                    // Pass a callback function to the global openConfirmModal
                     props.openConfirmModal(async () => {
                         await deleteUser(itemToDeleteId.value);
                     });
@@ -320,7 +373,16 @@
 
                 async function deleteUser(id) {
                     try {
-                        const response = await fetch(`${props.apiBaseUrl}/users/${id}`, { method: 'DELETE' });
+                        const response = await fetch(`${props.apiBaseUrl}/users/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            }
+                        });
+                        if (response.status === 401) {
+                            users_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to delete user');
@@ -336,7 +398,21 @@
                 }
 
                 onMounted(() => {
-                    fetchUsers();
+                    if (props.sessionToken) { // Only fetch if authenticated
+                        fetchUsers();
+                    } else {
+                        users_error.value = "Please log in to view users.";
+                    }
+                });
+
+                // Watch for changes in sessionToken to re-fetch data
+                watch(() => props.sessionToken, (newToken) => {
+                    if (newToken) {
+                        fetchUsers();
+                    } else {
+                        users_table.splice(0, users_table.length); // Clear data
+                        users_error.value = "Please log in to view users.";
+                    }
                 });
 
                 return {
@@ -347,7 +423,7 @@
             },
             template: `
                 <h1 class="text-3xl font-bold text-gray-800 mb-6">User Management</h1>
-                <button @click="openUserModal(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md mb-6 transition-colors duration-200">
+                <button @click="openUserModal(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md mb-6 transition-colors duration-200" :disabled="!sessionToken">
                     Add New User
                 </button>
                 <div class="bg-white rounded-lg shadow-md p-6">
@@ -357,7 +433,7 @@
                         <strong class="font-bold">Error!</strong>
                         <span class="block sm:inline"> {{ users_error }}</span>
                     </div>
-                    <div v-else-if="users_table.length === 0" class="text-center py-8 text-gray-500">
+                    <div v-else-if="users_table.length === 0 && !loading_users && !users_error" class="text-center py-8 text-gray-500">
                         No users found.
                     </div>
                     <div v-else class="overflow-x-auto">
@@ -378,44 +454,44 @@
                                     <td class="py-3 px-4 text-sm text-gray-800">{{ user.email }}</td>
                                     <td class="py-3 px-4 text-sm text-gray-800">{{ user.sessions }}</td>
                                     <td class="py-3 px-4 text-sm">
-                                        <button @click="openUserModal(user)" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                                        <button @click="confirmDeleteUser(user.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                                        <button @click="openUserModal(user)" class="text-indigo-600 hover:text-indigo-900 mr-3" :disabled="!sessionToken">Edit</button>
+                                        <button @click="confirmDeleteUser(user.id)" class="text-red-600 hover:text-red-900" :disabled="!sessionToken">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
 
-                <div v-if="isUserModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingUser ? 'Edit User' : 'Add New User' }}</h2>
-                        <form @submit.prevent="saveUser">
-                            <div class="mb-4">
-                                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
-                                <input type="text" id="username" v-model="userForm.username" required
-                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                            <div class="mb-4">
-                                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                                <input type="email" id="email" v-model="userForm.email" required
-                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                            <div class="mb-6">
-                                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-                                <input type="password" id="password" v-model="userForm.password" :required="!editingUser"
-                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <p v-if="editingUser" class="text-gray-500 text-xs mt-1">Leave blank to keep current password.</p>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                                    {{ editingUser ? 'Update User' : 'Add User' }}
-                                </button>
-                                <button type="button" @click="closeUserModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
+                    <div v-if="isUserModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+                        <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingUser ? 'Edit User' : 'Add New User' }}</h2>
+                            <form @submit.prevent="saveUser">
+                                <div class="mb-4">
+                                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+                                    <input type="text" id="username" v-model="userForm.username" required
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                                    <input type="email" id="email" v-model="userForm.email" required
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div class="mb-6">
+                                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                                    <input type="password" id="password" v-model="userForm.password" :required="!editingUser"
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <p v-if="editingUser" class="text-gray-500 text-xs mt-1">Leave blank to keep current password.</p>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                        {{ editingUser ? 'Update User' : 'Add User' }}
+                                    </button>
+                                    <button type="button" @click="closeUserModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             `
@@ -423,7 +499,7 @@
 
         // Orders Component
         const OrdersComponent = {
-            props: ['apiBaseUrl', 'openConfirmModal'],
+            props: ['apiBaseUrl', 'openConfirmModal', 'sessionToken'],
             setup(props) {
                 const ads_order_table = reactive([]);
                 const loading_orders = ref(false);
@@ -442,7 +518,15 @@
                     loading_orders.value = true;
                     orders_error.value = null;
                     try {
-                        const response = await fetch(`${props.apiBaseUrl}/ads-orders`);
+                        const response = await fetch(`${props.apiBaseUrl}/ads-orders`, {
+                            headers: {
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            }
+                        });
+                        if (response.status === 401) {
+                            orders_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to fetch ads orders');
@@ -487,6 +571,7 @@
                 }
 
                 async function saveOrder() {
+                    // Calculate days
                     if (orderForm.start_date && orderForm.end_date) {
                         const startDate = new Date(orderForm.start_date);
                         const endDate = new Date(new Date(orderForm.end_date).setHours(23, 59, 59, 999));
@@ -501,9 +586,16 @@
                     try {
                         const response = await fetch(url, {
                             method: method,
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            },
                             body: JSON.stringify(orderForm)
                         });
+                        if (response.status === 401) {
+                            orders_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to save ads order');
@@ -525,7 +617,16 @@
 
                 async function deleteOrder(id) {
                     try {
-                        const response = await fetch(`${props.apiBaseUrl}/ads-orders/${id}`, { method: 'DELETE' });
+                        const response = await fetch(`${props.apiBaseUrl}/ads-orders/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            }
+                        });
+                        if (response.status === 401) {
+                            orders_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to delete order');
@@ -541,7 +642,21 @@
                 }
 
                 onMounted(() => {
-                    fetchOrders();
+                    if (props.sessionToken) { // Only fetch if authenticated
+                        fetchOrders();
+                    } else {
+                        ads_order_table.splice(0, ads_order_table.length);
+                        orders_error.value = "Please log in to view ads orders.";
+                    }
+                });
+
+                watch(() => props.sessionToken, (newToken) => {
+                    if (newToken) {
+                        fetchOrders();
+                    } else {
+                        ads_order_table.splice(0, ads_order_table.length);
+                        orders_error.value = "Please log in to view ads orders.";
+                    }
                 });
 
                 return {
@@ -552,7 +667,7 @@
             },
             template: `
                 <h1 class="text-3xl font-bold text-gray-800 mb-6">Ads Order Management</h1>
-                <button @click="openOrderModal(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md mb-6 transition-colors duration-200">
+                <button @click="openOrderModal(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md mb-6 transition-colors duration-200" :disabled="!sessionToken">
                     Create New Order
                 </button>
                 <div class="bg-white rounded-lg shadow-md p-6">
@@ -562,7 +677,7 @@
                         <strong class="font-bold">Error!</strong>
                         <span class="block sm:inline"> {{ orders_error }}</span>
                     </div>
-                    <div v-else-if="ads_order_table.length === 0" class="text-center py-8 text-gray-500">
+                    <div v-else-if="ads_order_table.length === 0 && !loading_orders && !orders_error" class="text-center py-8 text-gray-500">
                         No ads orders found.
                     </div>
                     <div v-else class="overflow-x-auto">
@@ -587,8 +702,8 @@
                                     <td class="py-3 px-4 text-sm text-gray-800">{{ order.platform }}</td>
                                     <td class="py-3 px-4 text-sm text-gray-800">{{ order.objective }}</td>
                                     <td class="py-3 px-4 text-sm">
-                                        <button @click="openOrderModal(order)" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                                        <button @click="confirmDeleteOrder(order.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                                        <button @click="openOrderModal(order)" class="text-indigo-600 hover:text-indigo-900 mr-3" :disabled="!sessionToken">Edit</button>
+                                        <button @click="confirmDeleteOrder(order.id)" class="text-red-600 hover:text-red-900" :disabled="!sessionToken">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -686,7 +801,7 @@
 
         // Reports Component
         const ReportsComponent = {
-            props: ['apiBaseUrl'],
+            props: ['apiBaseUrl', 'sessionToken'],
             setup(props) {
                 const ads_exchange_rate_table = reactive([]);
                 const ads_report_sync_key_value = reactive({});
@@ -699,7 +814,15 @@
                     loading_exchange_rates.value = true;
                     exchange_rates_error.value = null;
                     try {
-                        const response = await fetch(`${props.apiBaseUrl}/ads-exchange-rates`);
+                        const response = await fetch(`${props.apiBaseUrl}/ads-exchange-rates`, {
+                            headers: {
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            }
+                        });
+                        if (response.status === 401) {
+                            exchange_rates_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to fetch exchange rates');
@@ -718,7 +841,15 @@
                     loading_report_sync.value = true;
                     report_sync_error.value = null;
                     try {
-                        const response = await fetch(`${props.apiBaseUrl}/ads-report-sync-key-value`);
+                        const response = await fetch(`${props.apiBaseUrl}/ads-report-sync-key-value`, {
+                            headers: {
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            }
+                        });
+                        if (response.status === 401) {
+                            report_sync_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to fetch report sync data');
@@ -734,8 +865,27 @@
                 }
 
                 onMounted(() => {
-                    fetchExchangeRates();
-                    fetchReportSyncData();
+                    if (props.sessionToken) { // Only fetch if authenticated
+                        fetchExchangeRates();
+                        fetchReportSyncData();
+                    } else {
+                        ads_exchange_rate_table.splice(0, ads_exchange_rate_table.length);
+                        Object.keys(ads_report_sync_key_value).forEach(key => delete ads_report_sync_key_value[key]);
+                        exchange_rates_error.value = "Please log in to view reports.";
+                        report_sync_error.value = "Please log in to view reports.";
+                    }
+                });
+
+                watch(() => props.sessionToken, (newToken) => {
+                    if (newToken) {
+                        fetchExchangeRates();
+                        fetchReportSyncData();
+                    } else {
+                        ads_exchange_rate_table.splice(0, ads_exchange_rate_table.length);
+                        Object.keys(ads_report_sync_key_value).forEach(key => delete ads_report_sync_key_value[key]);
+                        exchange_rates_error.value = "Please log in to view reports.";
+                        report_sync_error.value = "Please log in to view reports.";
+                    }
                 });
 
                 return {
@@ -753,7 +903,7 @@
                             <strong class="font-bold">Error!</strong>
                             <span class="block sm:inline"> {{ exchange_rates_error }}</span>
                         </div>
-                        <div v-else-if="ads_exchange_rate_table.length === 0" class="text-center py-8 text-gray-500">
+                        <div v-else-if="ads_exchange_rate_table.length === 0 && !loading_exchange_rates && !exchange_rates_error" class="text-center py-8 text-gray-500">
                             No exchange rates found.
                         </div>
                         <div v-else class="overflow-x-auto">
@@ -785,7 +935,7 @@
                             <strong class="font-bold">Error!</strong>
                             <span class="block sm:inline"> {{ report_sync_error }}</span>
                         </div>
-                        <div v-else-if="Object.keys(ads_report_sync_key_value).length === 0" class="text-center py-8 text-gray-500">
+                        <div v-else-if="Object.keys(ads_report_sync_key_value).length === 0 && !loading_report_sync && !report_sync_error" class="text-center py-8 text-gray-500">
                             No report sync data found.
                         </div>
                         <div v-else class="overflow-x-auto">
@@ -811,7 +961,7 @@
 
         // Invoices Component
         const InvoicesComponent = {
-            props: ['apiBaseUrl', 'openConfirmModal'],
+            props: ['apiBaseUrl', 'openConfirmModal', 'sessionToken'],
             setup(props) {
                 const ads_invoices = reactive([]);
                 const loading_invoices = ref(false);
@@ -829,7 +979,15 @@
                     loading_invoices.value = true;
                     invoices_error.value = null;
                     try {
-                        const response = await fetch(`${props.apiBaseUrl}/invoices`);
+                        const response = await fetch(`${props.apiBaseUrl}/invoices`, {
+                            headers: {
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            }
+                        });
+                        if (response.status === 401) {
+                            invoices_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to fetch invoices');
@@ -875,9 +1033,16 @@
                     try {
                         const response = await fetch(url, {
                             method: method,
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            },
                             body: JSON.stringify(invoiceForm)
                         });
+                        if (response.status === 401) {
+                            invoices_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to save invoice');
@@ -899,7 +1064,16 @@
 
                 async function deleteInvoice(id) {
                     try {
-                        const response = await fetch(`${props.apiBaseUrl}/invoices/${id}`, { method: 'DELETE' });
+                        const response = await fetch(`${props.apiBaseUrl}/invoices/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${props.sessionToken}` // Add token
+                            }
+                        });
+                        if (response.status === 401) {
+                            invoices_error.value = "Authentication required. Please log in.";
+                            return;
+                        }
                         if (!response.ok) {
                             const errorData = await response.json();
                             throw new Error(errorData.error || 'Failed to delete invoice');
@@ -915,7 +1089,21 @@
                 }
 
                 onMounted(() => {
-                    fetchInvoices();
+                    if (props.sessionToken) { // Only fetch if authenticated
+                        fetchInvoices();
+                    } else {
+                        ads_invoices.splice(0, ads_invoices.length);
+                        invoices_error.value = "Please log in to view invoices.";
+                    }
+                });
+
+                watch(() => props.sessionToken, (newToken) => {
+                    if (newToken) {
+                        fetchInvoices();
+                    } else {
+                        ads_invoices.splice(0, ads_invoices.length);
+                        invoices_error.value = "Please log in to view invoices.";
+                    }
                 });
 
                 return {
@@ -926,7 +1114,7 @@
             },
             template: `
                 <h1 class="text-3xl font-bold text-gray-800 mb-6">Invoice Management</h1>
-                <button @click="openInvoiceModal(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md mb-6 transition-colors duration-200">
+                <button @click="openInvoiceModal(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md mb-6 transition-colors duration-200" :disabled="!sessionToken">
                     Create New Invoice
                 </button>
                 <div class="bg-white rounded-lg shadow-md p-6">
@@ -936,7 +1124,7 @@
                         <strong class="font-bold">Error!</strong>
                         <span class="block sm:inline"> {{ invoices_error }}</span>
                     </div>
-                    <div v-else-if="ads_invoices.length === 0" class="text-center py-8 text-gray-500">
+                    <div v-else-if="ads_invoices.length === 0 && !loading_invoices && !invoices_error" class="text-center py-8 text-gray-500">
                         No invoices found.
                     </div>
                     <div v-else class="overflow-x-auto">
@@ -962,60 +1150,60 @@
                                         <span v-else>N/A</span>
                                     </td>
                                     <td class="py-3 px-4 text-sm">
-                                        <button @click="openInvoiceModal(invoice)" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                                        <button @click="confirmDeleteInvoice(invoice.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                                        <button @click="openInvoiceModal(invoice)" class="text-indigo-600 hover:text-indigo-900 mr-3" :disabled="!sessionToken">Edit</button>
+                                        <button @click="confirmDeleteInvoice(invoice.id)" class="text-red-600 hover:text-red-900" :disabled="!sessionToken">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
 
-                <div v-if="isInvoiceModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingInvoice ? 'Edit Invoice' : 'Create New Invoice' }}</h2>
-                        <form @submit.prevent="saveInvoice">
-                            <div class="mb-4">
-                                <label for="invoice_date" class="block text-gray-700 text-sm font-bold mb-2">Date:</label>
-                                <input type="date" id="invoice_date" v-model="invoiceForm.date" required
-                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                            <div class="mb-4">
-                                <label for="invoice_month" class="block text-gray-700 text-sm font-bold mb-2">Month:</label>
-                                <input type="text" id="invoice_month" v-model="invoiceForm.month" placeholder="e.g., May 2025" required
-                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                            <div class="mb-4">
-                                <label for="transaction_id" class="block text-gray-700 text-sm font-bold mb-2">Transaction ID:</label>
-                                <input type="text" id="transaction_id" v-model="invoiceForm.transaction_id" required
-                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                            <div class="mb-4">
-                                <label for="invoice_platform" class="block text-gray-700 text-sm font-bold mb-2">Platform:</label>
-                                <select id="invoice_platform" v-model="invoiceForm.platform" required
-                                        class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                    <option value="">Select Platform</option>
-                                    <option value="Facebook">Facebook</option>
-                                    <option value="Google Ads">Google Ads</option>
-                                    <option value="TikTok">TikTok</option>
-                                    <option value="LinkedIn">LinkedIn</option>
-                                </select>
-                            </div>
-                            <div class="mb-6">
-                                <label for="attachments" class="block text-gray-700 text-sm font-bold mb-2">Attachments (URL):</label>
-                                <input type="url" id="attachments" v-model="invoiceForm.attachments"
-                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <p class="text-gray-500 text-xs mt-1">Provide a URL to the attachment (e.g., PDF link).</p>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                                    {{ editingInvoice ? 'Update Invoice' : 'Create Invoice' }}
-                                </button>
-                                <button type="button" @click="closeInvoiceModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
+                    <div v-if="isInvoiceModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+                        <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingInvoice ? 'Edit Invoice' : 'Create New Invoice' }}</h2>
+                            <form @submit.prevent="saveInvoice">
+                                <div class="mb-4">
+                                    <label for="invoice_date" class="block text-gray-700 text-sm font-bold mb-2">Date:</label>
+                                    <input type="date" id="invoice_date" v-model="invoiceForm.date" required
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="invoice_month" class="block text-gray-700 text-sm font-bold mb-2">Month:</label>
+                                    <input type="text" id="invoice_month" v-model="invoiceForm.month" placeholder="e.g., May 2025" required
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="transaction_id" class="block text-gray-700 text-sm font-bold mb-2">Transaction ID:</label>
+                                    <input type="text" id="transaction_id" v-model="invoiceForm.transaction_id" required
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="invoice_platform" class="block text-gray-700 text-sm font-bold mb-2">Platform:</label>
+                                    <select id="invoice_platform" v-model="invoiceForm.platform" required
+                                            class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        <option value="">Select Platform</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Google Ads">Google Ads</option>
+                                        <option value="TikTok">TikTok</option>
+                                        <option value="LinkedIn">LinkedIn</option>
+                                    </select>
+                                </div>
+                                <div class="mb-6">
+                                    <label for="attachments" class="block text-gray-700 text-sm font-bold mb-2">Attachments (URL):</label>
+                                    <input type="url" id="attachments" v-model="invoiceForm.attachments"
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <p class="text-gray-500 text-xs mt-1">Provide a URL to the attachment (e.g., PDF link).</p>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                        {{ editingInvoice ? 'Update Invoice' : 'Create Invoice' }}
+                                    </button>
+                                    <button type="button" @click="closeInvoiceModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             `
@@ -1027,9 +1215,16 @@
                 const currentPath = ref(window.location.pathname);
                 const isProfileDropdownOpen = ref(false);
 
+                // --- Authentication State ---
+                const sessionToken = ref(localStorage.getItem('sessionToken') || null);
+                const isLoggedIn = computed(() => sessionToken.value !== null);
+                const showLoginModal = ref(false);
+                const loginForm = reactive({ username: '', password: '' });
+                const loginError = ref(null);
+
                 // --- Global Confirmation Modal State & Logic ---
                 const isConfirmModalOpen = ref(false);
-                const deleteActionCallback = ref(null); // Stores the specific delete function for the current component
+                const deleteActionCallback = ref(null);
 
                 function openConfirmModal(callback) {
                     deleteActionCallback.value = callback;
@@ -1049,6 +1244,42 @@
                     deleteActionCallback.value = null;
                 }
 
+                // --- Authentication Functions ---
+                async function handleLogin() {
+                    loginError.value = null;
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/login`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(loginForm)
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Login failed');
+                        }
+
+                        const data = await response.json();
+                        sessionToken.value = data.token;
+                        localStorage.setItem('sessionToken', data.token); // Store token
+                        showLoginModal.value = false;
+                        loginForm.username = '';
+                        loginForm.password = '';
+                        navigate('/'); // Redirect to dashboard after login
+                    } catch (error) {
+                        console.error("Login error:", error);
+                        loginError.value = error.message;
+                    }
+                }
+
+                function handleLogout() {
+                    sessionToken.value = null;
+                    localStorage.removeItem('sessionToken'); // Clear token
+                    navigate('/'); // Redirect to login/dashboard
+                    isProfileDropdownOpen.value = false;
+                    console.log('Logged out');
+                }
+
                 // --- Routing Logic ---
                 const routes = {
                     '/': DashboardComponent,
@@ -1059,13 +1290,21 @@
                 };
 
                 const currentView = computed(() => {
-                    // Default to Dashboard if path is not found or is '/index.html'
+                    // If not logged in, force to login modal or a login message
+                    if (!isLoggedIn.value && currentPath.value !== '/') { // Allow dashboard to show external data without login
+                        // For protected routes, redirect to home or show login modal
+                        showLoginModal.value = true;
+                        loginError.value = "Please log in to access this page.";
+                        // Optionally, navigate back to '/' if you want the URL to reflect the state
+                        // navigate('/'); 
+                        return { template: '<div class="text-center py-16 text-gray-500 text-2xl">Access Denied. Please log in.</div>' };
+                    }
+
                     let view = routes[currentPath.value];
                     if (!view && currentPath.value === '/index.html') {
                         view = DashboardComponent;
                         currentPath.value = '/'; // Normalize path for active menu styling
                     } else if (!view) {
-                        // Fallback for unknown routes, could be a 404 component
                         return { template: '<div class="text-center py-16 text-gray-500 text-2xl">Page Not Found (404)</div>' };
                     }
                     return view;
@@ -1087,17 +1326,16 @@
                 function toggleProfileDropdown() {
                     isProfileDropdownOpen.value = !isProfileDropdownOpen.value;
                 }
-                function signIn() { console.log('Sign In clicked'); isProfileDropdownOpen.value = false; }
-                function signOut() { console.log('Sign Out clicked'); isProfileDropdownOpen.value = false; }
                 function settings() { console.log('Settings clicked'); isProfileDropdownOpen.value = false; }
 
                 return {
                     currentPath,
                     currentView,
                     navigate,
-                    isProfileDropdownOpen, toggleProfileDropdown, signIn, signOut, settings,
+                    isProfileDropdownOpen, toggleProfileDropdown, settings,
                     isConfirmModalOpen, openConfirmModal, confirmDelete, cancelDelete,
-                    API_BASE_URL // Pass API_BASE_URL down to components
+                    API_BASE_URL,
+                    sessionToken, isLoggedIn, showLoginModal, loginForm, handleLogin, handleLogout, loginError
                 };
             }
         }).mount('#app');
