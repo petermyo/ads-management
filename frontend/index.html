@@ -555,7 +555,8 @@
             setup() {
                 // IMPORTANT: Replace this with your deployed Cloudflare Worker URL
                 // Example: const API_BASE_URL = "https://my-ads-backend.your-subdomain.workers.dev/api";
-                const API_BASE_URL = "http://localhost:8787/api"; // Default for local development with `wrangler dev`
+                const API_BASE_URL = "/api"
+                //const API_BASE_URL = "http://localhost:8787/api"; // Default for local development with `wrangler dev`
 
                 const currentView = ref('dashboard');
                 const isProfileDropdownOpen = ref(false);
