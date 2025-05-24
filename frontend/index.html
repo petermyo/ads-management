@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Management Dashboard</title>
+    <title>Ads Management Dashboard SPA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -55,44 +55,44 @@
                 </div>
                 <ul class="flex space-x-4">
                     <li>
-                        <button @click="currentView = 'dashboard'"
-                                :class="{'bg-gray-700 text-indigo-300': currentView === 'dashboard', 'hover:bg-gray-700': currentView !== 'dashboard'}"
-                                class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
+                        <a href="/" @click.prevent="navigate('/')"
+                           :class="{'bg-gray-700 text-indigo-300': currentPath === '/', 'hover:bg-gray-700': currentPath !== '/'}"
+                           class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                             Dashboard
-                        </button>
+                        </a>
                     </li>
                     <li>
-                        <button @click="currentView = 'users'"
-                                :class="{'bg-gray-700 text-indigo-300': currentView === 'users', 'hover:bg-gray-700': currentView !== 'users'}"
-                                class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
+                        <a href="/users" @click.prevent="navigate('/users')"
+                           :class="{'bg-gray-700 text-indigo-300': currentPath === '/users', 'hover:bg-gray-700': currentPath !== '/users'}"
+                           class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-3-3H8a3 3 0 00-3 3v2h5m0-9a4 4 0 11-8 0 4 4 0 018 0zM12 9a4 4 0 100-8 4 4 0 000 8z"></path></svg>
                             Users
-                        </button>
+                        </a>
                     </li>
                     <li>
-                        <button @click="currentView = 'orders'"
-                                :class="{'bg-gray-700 text-indigo-300': currentView === 'orders', 'hover:bg-gray-700': currentView !== 'orders'}"
-                                class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
+                        <a href="/orders" @click.prevent="navigate('/orders')"
+                           :class="{'bg-gray-700 text-indigo-300': currentPath === '/orders', 'hover:bg-gray-700': currentPath !== '/orders'}"
+                           class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                             Ads Orders
-                        </button>
+                        </a>
                     </li>
                     <li>
-                        <button @click="currentView = 'reports'"
-                                :class="{'bg-gray-700 text-indigo-300': currentView === 'reports', 'hover:bg-gray-700': currentView !== 'reports'}"
-                                class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
+                        <a href="/reports" @click.prevent="navigate('/reports')"
+                           :class="{'bg-gray-700 text-indigo-300': currentPath === '/reports', 'hover:bg-gray-700': currentPath !== '/reports'}"
+                           class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.79 2-4 2s-4-.895-4-2 1.79-2 4-2 4 .895 4 2zm12-3c0 1.105-1.79 2-4 2s-4-.895-4-2 1.79-2 4-2 4 .895 4 2zM9 6v.01M12 12h.01"></path></svg>
                             Ads Report
-                        </button>
+                        </a>
                     </li>
                     <li>
-                        <button @click="currentView = 'invoices'"
-                                :class="{'bg-gray-700 text-indigo-300': currentView === 'invoices', 'hover:bg-gray-700': currentView !== 'invoices'}"
-                                class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
+                        <a href="/invoices" @click.prevent="navigate('/invoices')"
+                           :class="{'bg-gray-700 text-indigo-300': currentPath === '/invoices', 'hover:bg-gray-700': currentPath !== '/invoices'}"
+                           class="py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             Invoices
-                        </button>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -114,9 +114,74 @@
         </nav>
 
         <main class="flex-1 p-8 overflow-auto">
-            <h1 class="text-3xl font-bold text-gray-800 mb-6 capitalize">{{ currentView.replace('-', ' ') }} Management</h1>
+            <component :is="currentView"
+                       :open-confirm-modal="openConfirmModal"
+                       :api-base-url="API_BASE_URL">
+            </component>
+        </main>
 
-            <div v-if="currentView === 'dashboard'">
+        <div v-if="isConfirmModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-sm text-center">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Confirm Deletion</h2>
+                <p class="text-gray-700 mb-6">Are you sure you want to delete this item?</p>
+                <div class="flex justify-center space-x-4">
+                    <button @click="confirmDelete" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                        Delete
+                    </button>
+                    <button type="button" @click="cancelDelete" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, reactive, computed, onMounted } = Vue;
+
+        // Global API Base URL
+        const API_BASE_URL = "/api"; // Cloudflare Pages Functions are routed under /api
+
+        // --- Component Definitions ---
+
+        // Dashboard Component
+        const DashboardComponent = {
+            props: ['apiBaseUrl'],
+            setup(props) {
+                const ads_data = ref([]);
+                const loading_ads_data = ref(true);
+                const ads_data_error = ref(null);
+
+                async function fetchAdsData() {
+                    loading_ads_data.value = true;
+                    ads_data_error.value = null;
+                    try {
+                        // Using opensheet.elk.sh for Google Sheet data
+                        const response = await fetch('https://opensheet.elk.sh/11qE_Bl0vm4viCfvvPKQDh6zMHWJZZNoXqWN-fvaDb50/sheet1');
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const data = await response.json();
+                        ads_data.value = data;
+                    } catch (error) {
+                        console.error("Error fetching ads data:", error);
+                        ads_data_error.value = "Failed to load ads data. Please check the sheet URL or your network connection.";
+                    } finally {
+                        loading_ads_data.value = false;
+                    }
+                }
+
+                onMounted(() => {
+                    fetchAdsData();
+                });
+
+                return {
+                    ads_data, loading_ads_data, ads_data_error
+                };
+            },
+            template: `
+                <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard Overview</h1>
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-xl font-semibold text-gray-700 mb-4">Ads Data Overview</h2>
                     <div v-if="loading_ads_data" class="text-center py-8 text-gray-500">
@@ -163,9 +228,125 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            `
+        };
 
-            <div v-else-if="currentView === 'users'">
+        // Users Component
+        const UsersComponent = {
+            props: ['apiBaseUrl', 'openConfirmModal'], // Receive openConfirmModal from parent
+            setup(props) {
+                const users_table = reactive([]);
+                const loading_users = ref(false);
+                const users_error = ref(null);
+
+                const isUserModalOpen = ref(false);
+                const editingUser = ref(null);
+                const userForm = reactive({
+                    id: null, created: null, username: '', password: '', email: '', sessions: 0
+                });
+
+                const itemToDeleteId = ref(null);
+
+                async function fetchUsers() {
+                    loading_users.value = true;
+                    users_error.value = null;
+                    try {
+                        const response = await fetch(`${props.apiBaseUrl}/users`);
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to fetch users');
+                        }
+                        const data = await response.json();
+                        users_table.splice(0, users_table.length, ...data);
+                    } catch (error) {
+                        console.error("Error fetching users:", error);
+                        users_error.value = `Error: ${error.message}`;
+                    } finally {
+                        loading_users.value = false;
+                    }
+                }
+
+                function openUserModal(user) {
+                    if (user) {
+                        editingUser.value = user;
+                        Object.assign(userForm, {
+                            id: user.id, created: user.created, username: user.username, email: user.email, sessions: user.sessions, password: ''
+                        });
+                    } else {
+                        editingUser.value = null;
+                        Object.assign(userForm, {
+                            id: null, created: null, username: '', password: '', email: '', sessions: 0
+                        });
+                    }
+                    isUserModalOpen.value = true;
+                }
+
+                function closeUserModal() {
+                    isUserModalOpen.value = false;
+                    editingUser.value = null;
+                    Object.assign(userForm, {
+                        id: null, created: null, username: '', password: '', email: '', sessions: 0
+                    });
+                }
+
+                async function saveUser() {
+                    const method = editingUser.value ? 'PUT' : 'POST';
+                    const url = editingUser.value ? `${props.apiBaseUrl}/users/${editingUser.value.id}` : `${props.apiBaseUrl}/users`;
+                    try {
+                        const response = await fetch(url, {
+                            method: method,
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(userForm)
+                        });
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to save user');
+                        }
+                        await fetchUsers();
+                        closeUserModal();
+                    } catch (error) {
+                        console.error("Error saving user:", error);
+                        users_error.value = `Error saving user: ${error.message}`;
+                    }
+                }
+
+                function confirmDeleteUser(id) {
+                    itemToDeleteId.value = id;
+                    // Pass a callback function to the global openConfirmModal
+                    props.openConfirmModal(async () => {
+                        await deleteUser(itemToDeleteId.value);
+                    });
+                }
+
+                async function deleteUser(id) {
+                    try {
+                        const response = await fetch(`${props.apiBaseUrl}/users/${id}`, { method: 'DELETE' });
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to delete user');
+                        }
+                        await fetchUsers();
+                        console.log('User deleted:', id);
+                    } catch (error) {
+                        console.error("Error deleting user:", error);
+                        users_error.value = `Error deleting user: ${error.message}`;
+                    } finally {
+                        itemToDeleteId.value = null;
+                    }
+                }
+
+                onMounted(() => {
+                    fetchUsers();
+                });
+
+                return {
+                    users_table, loading_users, users_error,
+                    isUserModalOpen, editingUser, userForm, openUserModal, closeUserModal, saveUser,
+                    confirmDeleteUser
+                };
+            },
+            template: `
+                <h1 class="text-3xl font-bold text-gray-800 mb-6">User Management</h1>
                 <button @click="openUserModal(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md mb-6 transition-colors duration-200">
                     Add New User
                 </button>
@@ -198,16 +379,179 @@
                                     <td class="py-3 px-4 text-sm text-gray-800">{{ user.sessions }}</td>
                                     <td class="py-3 px-4 text-sm">
                                         <button @click="openUserModal(user)" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                                        <button @click="deleteUser(user.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                                        <button @click="confirmDeleteUser(user.id)" class="text-red-600 hover:text-red-900">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
 
-            <div v-else-if="currentView === 'orders'">
+                <div v-if="isUserModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingUser ? 'Edit User' : 'Add New User' }}</h2>
+                        <form @submit.prevent="saveUser">
+                            <div class="mb-4">
+                                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+                                <input type="text" id="username" v-model="userForm.username" required
+                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                                <input type="email" id="email" v-model="userForm.email" required
+                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div class="mb-6">
+                                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                                <input type="password" id="password" v-model="userForm.password" :required="!editingUser"
+                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <p v-if="editingUser" class="text-gray-500 text-xs mt-1">Leave blank to keep current password.</p>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                    {{ editingUser ? 'Update User' : 'Add User' }}
+                                </button>
+                                <button type="button" @click="closeUserModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+        };
+
+        // Orders Component
+        const OrdersComponent = {
+            props: ['apiBaseUrl', 'openConfirmModal'],
+            setup(props) {
+                const ads_order_table = reactive([]);
+                const loading_orders = ref(false);
+                const orders_error = ref(null);
+
+                const isOrderModalOpen = ref(false);
+                const editingOrder = ref(null);
+                const orderForm = reactive({
+                    id: null, created: null, start_date: '', end_date: '', campaign_name: '', budget: 0, days: 0,
+                    platform: '', objective: '', auction: '', estimated_impression: 0, estimated_click: 0, estimated_ctr: 0
+                });
+
+                const itemToDeleteId = ref(null);
+
+                async function fetchOrders() {
+                    loading_orders.value = true;
+                    orders_error.value = null;
+                    try {
+                        const response = await fetch(`${props.apiBaseUrl}/ads-orders`);
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to fetch ads orders');
+                        }
+                        const data = await response.json();
+                        ads_order_table.splice(0, ads_order_table.length, ...data);
+                    } catch (error) {
+                        console.error("Error fetching ads orders:", error);
+                        orders_error.value = `Error: ${error.message}`;
+                    } finally {
+                        loading_orders.value = false;
+                    }
+                }
+
+                function openOrderModal(order) {
+                    if (order) {
+                        editingOrder.value = order;
+                        Object.assign(orderForm, {
+                            id: order.id, created: order.created, start_date: order.start_date, end_date: order.end_date,
+                            campaign_name: order.campaign_name, budget: order.budget, days: order.days,
+                            platform: order.platform, objective: order.objective, auction: order.auction,
+                            estimated_impression: order.estimated_impression, estimated_click: order.estimated_click,
+                            estimated_ctr: order.estimated_ctr
+                        });
+                    } else {
+                        editingOrder.value = null;
+                        Object.assign(orderForm, {
+                            id: null, created: null, start_date: '', end_date: '', campaign_name: '', budget: 0, days: 0,
+                            platform: '', objective: '', auction: '', estimated_impression: 0, estimated_click: 0, estimated_ctr: 0
+                        });
+                    }
+                    isOrderModalOpen.value = true;
+                }
+
+                function closeOrderModal() {
+                    isOrderModalOpen.value = false;
+                    editingOrder.value = null;
+                    Object.assign(orderForm, {
+                        id: null, created: null, start_date: '', end_date: '', campaign_name: '', budget: 0, days: 0,
+                        platform: '', objective: '', auction: '', estimated_impression: 0, estimated_click: 0, estimated_ctr: 0
+                    });
+                }
+
+                async function saveOrder() {
+                    if (orderForm.start_date && orderForm.end_date) {
+                        const startDate = new Date(orderForm.start_date);
+                        const endDate = new Date(new Date(orderForm.end_date).setHours(23, 59, 59, 999));
+                        const diffTime = Math.abs(endDate - startDate);
+                        orderForm.days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    } else {
+                        orderForm.days = 0;
+                    }
+
+                    const method = editingOrder.value ? 'PUT' : 'POST';
+                    const url = editingOrder.value ? `${props.apiBaseUrl}/ads-orders/${editingOrder.value.id}` : `${props.apiBaseUrl}/ads-orders`;
+                    try {
+                        const response = await fetch(url, {
+                            method: method,
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(orderForm)
+                        });
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to save ads order');
+                        }
+                        await fetchOrders();
+                        closeOrderModal();
+                    } catch (error) {
+                        console.error("Error saving order:", error);
+                        orders_error.value = `Error saving order: ${error.message}`;
+                    }
+                }
+
+                function confirmDeleteOrder(id) {
+                    itemToDeleteId.value = id;
+                    props.openConfirmModal(async () => {
+                        await deleteOrder(itemToDeleteId.value);
+                    });
+                }
+
+                async function deleteOrder(id) {
+                    try {
+                        const response = await fetch(`${props.apiBaseUrl}/ads-orders/${id}`, { method: 'DELETE' });
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to delete order');
+                        }
+                        await fetchOrders();
+                        console.log('Order deleted:', id);
+                    } catch (error) {
+                        console.error("Error deleting order:", error);
+                        orders_error.value = `Error deleting order: ${error.message}`;
+                    } finally {
+                        itemToDeleteId.value = null;
+                    }
+                }
+
+                onMounted(() => {
+                    fetchOrders();
+                });
+
+                return {
+                    ads_order_table, loading_orders, orders_error,
+                    isOrderModalOpen, editingOrder, orderForm, openOrderModal, closeOrderModal, saveOrder,
+                    confirmDeleteOrder
+                };
+            },
+            template: `
+                <h1 class="text-3xl font-bold text-gray-800 mb-6">Ads Order Management</h1>
                 <button @click="openOrderModal(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md mb-6 transition-colors duration-200">
                     Create New Order
                 </button>
@@ -244,16 +588,163 @@
                                     <td class="py-3 px-4 text-sm text-gray-800">{{ order.objective }}</td>
                                     <td class="py-3 px-4 text-sm">
                                         <button @click="openOrderModal(order)" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                                        <button @click="deleteOrder(order.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                                        <button @click="confirmDeleteOrder(order.id)" class="text-red-600 hover:text-red-900">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
 
-            <div v-else-if="currentView === 'reports'">
+                <div v-if="isOrderModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingOrder ? 'Edit Ads Order' : 'Create New Ads Order' }}</h2>
+                        <form @submit.prevent="saveOrder">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="campaign_name" class="block text-gray-700 text-sm font-bold mb-2">Campaign Name:</label>
+                                    <input type="text" id="campaign_name" v-model="orderForm.campaign_name" required
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label for="budget" class="block text-gray-700 text-sm font-bold mb-2">Budget ($):</label>
+                                    <input type="number" id="budget" v-model.number="orderForm.budget" required step="0.01"
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="start_date" class="block text-gray-700 text-sm font-bold mb-2">Start Date:</label>
+                                    <input type="date" id="start_date" v-model="orderForm.start_date" required
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label for="end_date" class="block text-gray-700 text-sm font-bold mb-2">End Date:</label>
+                                    <input type="date" id="end_date" v-model="orderForm.end_date" required
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="platform" class="block text-gray-700 text-sm font-bold mb-2">Platform:</label>
+                                    <select id="platform" v-model="orderForm.platform" required
+                                            class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        <option value="">Select Platform</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Google Ads">Google Ads</option>
+                                        <option value="TikTok">TikTok</option>
+                                        <option value="LinkedIn">LinkedIn</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="objective" class="block text-gray-700 text-sm font-bold mb-2">Objective:</label>
+                                    <select id="objective" v-model="orderForm.objective" required
+                                            class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        <option value="">Select Objective</option>
+                                        <option value="Brand Awareness">Brand Awareness</option>
+                                        <option value="Lead Generation">Lead Generation</option>
+                                        <option value="Sales">Sales</option>
+                                        <option value="Traffic">Traffic</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div>
+                                    <label for="auction" class="block text-gray-700 text-sm font-bold mb-2">Auction Type:</label>
+                                    <input type="text" id="auction" v-model="orderForm.auction"
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label for="estimated_impression" class="block text-gray-700 text-sm font-bold mb-2">Estimated Impressions:</label>
+                                    <input type="number" id="estimated_impression" v-model.number="orderForm.estimated_impression"
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label for="estimated_click" class="block text-gray-700 text-sm font-bold mb-2">Estimated Clicks:</label>
+                                    <input type="number" id="estimated_click" v-model.number="orderForm.estimated_click"
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label for="estimated_ctr" class="block text-gray-700 text-sm font-bold mb-2">Estimated CTR (%):</label>
+                                    <input type="number" id="estimated_ctr" v-model.number="orderForm.estimated_ctr" step="0.01"
+                                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                    {{ editingOrder ? 'Update Order' : 'Create Order' }}
+                                </button>
+                                <button type="button" @click="closeOrderModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+        };
+
+        // Reports Component
+        const ReportsComponent = {
+            props: ['apiBaseUrl'],
+            setup(props) {
+                const ads_exchange_rate_table = reactive([]);
+                const ads_report_sync_key_value = reactive({});
+                const loading_exchange_rates = ref(false);
+                const exchange_rates_error = ref(null);
+                const loading_report_sync = ref(false);
+                const report_sync_error = ref(null);
+
+                async function fetchExchangeRates() {
+                    loading_exchange_rates.value = true;
+                    exchange_rates_error.value = null;
+                    try {
+                        const response = await fetch(`${props.apiBaseUrl}/ads-exchange-rates`);
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to fetch exchange rates');
+                        }
+                        const data = await response.json();
+                        ads_exchange_rate_table.splice(0, ads_exchange_rate_table.length, ...data);
+                    } catch (error) {
+                        console.error("Error fetching exchange rates:", error);
+                        exchange_rates_error.value = `Error: ${error.message}`;
+                    } finally {
+                        loading_exchange_rates.value = false;
+                    }
+                }
+
+                async function fetchReportSyncData() {
+                    loading_report_sync.value = true;
+                    report_sync_error.value = null;
+                    try {
+                        const response = await fetch(`${props.apiBaseUrl}/ads-report-sync-key-value`);
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to fetch report sync data');
+                        }
+                        const data = await response.json();
+                        Object.assign(ads_report_sync_key_value, data);
+                    } catch (error) {
+                        console.error("Error fetching report sync data:", error);
+                        report_sync_error.value = `Error: ${error.message}`;
+                    } finally {
+                        loading_report_sync.value = false;
+                    }
+                }
+
+                onMounted(() => {
+                    fetchExchangeRates();
+                    fetchReportSyncData();
+                });
+
+                return {
+                    ads_exchange_rate_table, ads_report_sync_key_value,
+                    loading_exchange_rates, exchange_rates_error, loading_report_sync, report_sync_error
+                };
+            },
+            template: `
+                <h1 class="text-3xl font-bold text-gray-800 mb-6">Ads Report Management</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white rounded-lg shadow-md p-6">
                         <h2 class="text-xl font-semibold text-gray-700 mb-4">Exchange Rates</h2>
@@ -315,9 +806,126 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            `
+        };
 
-            <div v-else-if="currentView === 'invoices'">
+        // Invoices Component
+        const InvoicesComponent = {
+            props: ['apiBaseUrl', 'openConfirmModal'],
+            setup(props) {
+                const ads_invoices = reactive([]);
+                const loading_invoices = ref(false);
+                const invoices_error = ref(null);
+
+                const isInvoiceModalOpen = ref(false);
+                const editingInvoice = ref(null);
+                const invoiceForm = reactive({
+                    id: null, date: '', month: '', transaction_id: '', platform: '', attachments: ''
+                });
+
+                const itemToDeleteId = ref(null);
+
+                async function fetchInvoices() {
+                    loading_invoices.value = true;
+                    invoices_error.value = null;
+                    try {
+                        const response = await fetch(`${props.apiBaseUrl}/invoices`);
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to fetch invoices');
+                        }
+                        const data = await response.json();
+                        ads_invoices.splice(0, ads_invoices.length, ...data);
+                    } catch (error) {
+                        console.error("Error fetching invoices:", error);
+                        invoices_error.value = `Error: ${error.message}`;
+                    } finally {
+                        loading_invoices.value = false;
+                    }
+                }
+
+                function openInvoiceModal(invoice) {
+                    if (invoice) {
+                        editingInvoice.value = invoice;
+                        Object.assign(invoiceForm, {
+                            id: invoice.id, date: invoice.date, month: invoice.month,
+                            transaction_id: invoice.transaction_id, platform: invoice.platform,
+                            attachments: invoice.attachments
+                        });
+                    } else {
+                        editingInvoice.value = null;
+                        Object.assign(invoiceForm, {
+                            id: null, date: '', month: '', transaction_id: '', platform: '', attachments: ''
+                        });
+                    }
+                    isInvoiceModalOpen.value = true;
+                }
+
+                function closeInvoiceModal() {
+                    isInvoiceModalOpen.value = false;
+                    editingInvoice.value = null;
+                    Object.assign(invoiceForm, {
+                        id: null, date: '', month: '', transaction_id: '', platform: '', attachments: ''
+                    });
+                }
+
+                async function saveInvoice() {
+                    const method = editingInvoice.value ? 'PUT' : 'POST';
+                    const url = editingInvoice.value ? `${props.apiBaseUrl}/invoices/${editingInvoice.value.id}` : `${props.apiBaseUrl}/invoices`;
+                    try {
+                        const response = await fetch(url, {
+                            method: method,
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(invoiceForm)
+                        });
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to save invoice');
+                        }
+                        await fetchInvoices();
+                        closeInvoiceModal();
+                    } catch (error) {
+                        console.error("Error saving invoice:", error);
+                        invoices_error.value = `Error saving invoice: ${error.message}`;
+                    }
+                }
+
+                function confirmDeleteInvoice(id) {
+                    itemToDeleteId.value = id;
+                    props.openConfirmModal(async () => {
+                        await deleteInvoice(itemToDeleteId.value);
+                    });
+                }
+
+                async function deleteInvoice(id) {
+                    try {
+                        const response = await fetch(`${props.apiBaseUrl}/invoices/${id}`, { method: 'DELETE' });
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to delete invoice');
+                        }
+                        await fetchInvoices();
+                        console.log('Invoice deleted:', id);
+                    } catch (error) {
+                        console.error("Error deleting invoice:", error);
+                        invoices_error.value = `Error deleting invoice: ${error.message}`;
+                    } finally {
+                        itemToDeleteId.value = null;
+                    }
+                }
+
+                onMounted(() => {
+                    fetchInvoices();
+                });
+
+                return {
+                    ads_invoices, loading_invoices, invoices_error,
+                    isInvoiceModalOpen, editingInvoice, invoiceForm, openInvoiceModal, closeInvoiceModal, saveInvoice,
+                    confirmDeleteInvoice
+                };
+            },
+            template: `
+                <h1 class="text-3xl font-bold text-gray-800 mb-6">Invoice Management</h1>
                 <button @click="openInvoiceModal(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md mb-6 transition-colors duration-200">
                     Create New Invoice
                 </button>
@@ -355,261 +963,125 @@
                                     </td>
                                     <td class="py-3 px-4 text-sm">
                                         <button @click="openInvoiceModal(invoice)" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                                        <button @click="deleteInvoice(invoice.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                                        <button @click="confirmDeleteInvoice(invoice.id)" class="text-red-600 hover:text-red-900">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-        </main>
 
-        <div v-if="isUserModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingUser ? 'Edit User' : 'Add New User' }}</h2>
-                <form @submit.prevent="saveUser">
-                    <div class="mb-4">
-                        <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
-                        <input type="text" id="username" v-model="userForm.username" required
-                               class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <div v-if="isInvoiceModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingInvoice ? 'Edit Invoice' : 'Create New Invoice' }}</h2>
+                        <form @submit.prevent="saveInvoice">
+                            <div class="mb-4">
+                                <label for="invoice_date" class="block text-gray-700 text-sm font-bold mb-2">Date:</label>
+                                <input type="date" id="invoice_date" v-model="invoiceForm.date" required
+                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="invoice_month" class="block text-gray-700 text-sm font-bold mb-2">Month:</label>
+                                <input type="text" id="invoice_month" v-model="invoiceForm.month" placeholder="e.g., May 2025" required
+                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="transaction_id" class="block text-gray-700 text-sm font-bold mb-2">Transaction ID:</label>
+                                <input type="text" id="transaction_id" v-model="invoiceForm.transaction_id" required
+                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="invoice_platform" class="block text-gray-700 text-sm font-bold mb-2">Platform:</label>
+                                <select id="invoice_platform" v-model="invoiceForm.platform" required
+                                        class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">Select Platform</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="Google Ads">Google Ads</option>
+                                    <option value="TikTok">TikTok</option>
+                                    <option value="LinkedIn">LinkedIn</option>
+                                </select>
+                            </div>
+                            <div class="mb-6">
+                                <label for="attachments" class="block text-gray-700 text-sm font-bold mb-2">Attachments (URL):</label>
+                                <input type="url" id="attachments" v-model="invoiceForm.attachments"
+                                       class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <p class="text-gray-500 text-xs mt-1">Provide a URL to the attachment (e.g., PDF link).</p>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                    {{ editingInvoice ? 'Update Invoice' : 'Create Invoice' }}
+                                </button>
+                                <button type="button" @click="closeInvoiceModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-4">
-                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                        <input type="email" id="email" v-model="userForm.email" required
-                               class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="mb-6">
-                        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-                        <input type="password" id="password" v-model="userForm.password" :required="!editingUser"
-                               class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <p v-if="editingUser" class="text-gray-500 text-xs mt-1">Leave blank to keep current password.</p>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                            {{ editingUser ? 'Update User' : 'Add User' }}
-                        </button>
-                        <button type="button" @click="closeUserModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div v-if="isOrderModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-lg">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingOrder ? 'Edit Ads Order' : 'Create New Ads Order' }}</h2>
-                <form @submit.prevent="saveOrder">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="campaign_name" class="block text-gray-700 text-sm font-bold mb-2">Campaign Name:</label>
-                            <input type="text" id="campaign_name" v-model="orderForm.campaign_name" required
-                                   class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label for="budget" class="block text-gray-700 text-sm font-bold mb-2">Budget ($):</label>
-                            <input type="number" id="budget" v-model.number="orderForm.budget" required step="0.01"
-                                   class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="start_date" class="block text-gray-700 text-sm font-bold mb-2">Start Date:</label>
-                            <input type="date" id="start_date" v-model="orderForm.start_date" required
-                                   class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label for="end_date" class="block text-gray-700 text-sm font-bold mb-2">End Date:</label>
-                            <input type="date" id="end_date" v-model="orderForm.end_date" required
-                                   class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="platform" class="block text-gray-700 text-sm font-bold mb-2">Platform:</label>
-                            <select id="platform" v-model="orderForm.platform" required
-                                    class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Select Platform</option>
-                                <option value="Facebook">Facebook</option>
-                                <option value="Google Ads">Google Ads</option>
-                                <option value="TikTok">TikTok</option>
-                                <option value="LinkedIn">LinkedIn</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="objective" class="block text-gray-700 text-sm font-bold mb-2">Objective:</label>
-                            <select id="objective" v-model="orderForm.objective" required
-                                    class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Select Objective</option>
-                                <option value="Brand Awareness">Brand Awareness</option>
-                                <option value="Lead Generation">Lead Generation</option>
-                                <option value="Sales">Sales</option>
-                                <option value="Traffic">Traffic</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <label for="auction" class="block text-gray-700 text-sm font-bold mb-2">Auction Type:</label>
-                            <input type="text" id="auction" v-model="orderForm.auction"
-                                   class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label for="estimated_impression" class="block text-gray-700 text-sm font-bold mb-2">Estimated Impressions:</label>
-                            <input type="number" id="estimated_impression" v-model.number="orderForm.estimated_impression"
-                                   class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label for="estimated_click" class="block text-gray-700 text-sm font-bold mb-2">Estimated Clicks:</label>
-                            <input type="number" id="estimated_click" v-model.number="orderForm.estimated_click"
-                                   class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label for="estimated_ctr" class="block text-gray-700 text-sm font-bold mb-2">Estimated CTR (%):</label>
-                            <input type="number" id="estimated_ctr" v-model.number="orderForm.estimated_ctr" step="0.01"
-                                   class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                            {{ editingOrder ? 'Update Order' : 'Create Order' }}
-                        </button>
-                        <button type="button" @click="closeOrderModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div v-if="isInvoiceModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ editingInvoice ? 'Edit Invoice' : 'Create New Invoice' }}</h2>
-                <form @submit.prevent="saveInvoice">
-                    <div class="mb-4">
-                        <label for="invoice_date" class="block text-gray-700 text-sm font-bold mb-2">Date:</label>
-                        <input type="date" id="invoice_date" v-model="invoiceForm.date" required
-                               class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="invoice_month" class="block text-gray-700 text-sm font-bold mb-2">Month:</label>
-                        <input type="text" id="invoice_month" v-model="invoiceForm.month" placeholder="e.g., May 2025" required
-                               class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="transaction_id" class="block text-gray-700 text-sm font-bold mb-2">Transaction ID:</label>
-                        <input type="text" id="transaction_id" v-model="invoiceForm.transaction_id" required
-                               class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="invoice_platform" class="block text-gray-700 text-sm font-bold mb-2">Platform:</label>
-                        <select id="invoice_platform" v-model="invoiceForm.platform" required
-                                class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="">Select Platform</option>
-                            <option value="Facebook">Facebook</option>
-                            <option value="Google Ads">Google Ads</option>
-                            <option value="TikTok">TikTok</option>
-                            <option value="LinkedIn">LinkedIn</option>
-                        </select>
-                    </div>
-                    <div class="mb-6">
-                        <label for="attachments" class="block text-gray-700 text-sm font-bold mb-2">Attachments (URL):</label>
-                        <input type="url" id="attachments" v-model="invoiceForm.attachments"
-                               class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <p class="text-gray-500 text-xs mt-1">Provide a URL to the attachment (e.g., PDF link).</p>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                            {{ editingInvoice ? 'Update Invoice' : 'Create Invoice' }}
-                        </button>
-                        <button type="button" @click="closeInvoiceModal" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div v-if="isConfirmModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-sm text-center">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">Confirm Deletion</h2>
-                <p class="text-gray-700 mb-6">Are you sure you want to delete this item?</p>
-                <div class="flex justify-center space-x-4">
-                    <button @click="confirmDelete" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                        Delete
-                    </button>
-                    <button type="button" @click="cancelDelete" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                        Cancel
-                    </button>
                 </div>
-            </div>
-        </div>
+            `
+        };
 
-    </div>
-
-    <script>
-        const { createApp, ref, reactive, onMounted } = Vue;
-
+        // Main Vue App
         createApp({
             setup() {
-                // IMPORTANT: Replace this with your deployed Cloudflare Worker URL
-                // Example: const API_BASE_URL = "https://my-ads-backend.your-subdomain.workers.dev/api";
-                const API_BASE_URL = "/api"
-                //const API_BASE_URL = "http://localhost:8787/api"; // Default for local development with `wrangler dev`
-
-                const currentView = ref('dashboard');
+                const currentPath = ref(window.location.pathname);
                 const isProfileDropdownOpen = ref(false);
 
-                // --- Data States ---
-                const users_table = reactive([]);
-                const ads_order_table = reactive([]);
-                const ads_exchange_rate_table = reactive([]);
-                const ads_report_sync_key_value = reactive({});
-                const ads_invoices = reactive([]);
-                const ads_data = ref([]); // For opensheet data
-
-                // Loading and Error states for each data type
-                const loading_users = ref(false);
-                const users_error = ref(null);
-                const loading_orders = ref(false);
-                const orders_error = ref(null);
-                const loading_invoices = ref(false);
-                const invoices_error = ref(null);
-                const loading_exchange_rates = ref(false);
-                const exchange_rates_error = ref(null);
-                const loading_report_sync = ref(false);
-                const report_sync_error = ref(null);
-                const loading_ads_data = ref(true); // For opensheet data
-                const ads_data_error = ref(null); // For opensheet data
-
-                // --- Modals State ---
-                const isUserModalOpen = ref(false);
-                const editingUser = ref(null);
-                const userForm = reactive({
-                    id: null, created: null, username: '', password: '', email: '', sessions: 0
-                });
-
-                const isOrderModalOpen = ref(false);
-                const editingOrder = ref(null);
-                const orderForm = reactive({
-                    id: null, created: null, start_date: '', end_date: '', campaign_name: '', budget: 0, days: 0,
-                    platform: '', objective: '', auction: '', estimated_impression: 0, estimated_click: 0, estimated_ctr: 0
-                });
-
-                const isInvoiceModalOpen = ref(false);
-                const editingInvoice = ref(null);
-                const invoiceForm = reactive({
-                    id: null, date: '', month: '', transaction_id: '', platform: '', attachments: ''
-                });
-
+                // --- Global Confirmation Modal State & Logic ---
                 const isConfirmModalOpen = ref(false);
-                const itemToDelete = ref(null); // { type: 'users'|'orders'|'invoices', id: '...' }
+                const deleteActionCallback = ref(null); // Stores the specific delete function for the current component
 
-                // --- Utility Functions ---
-                function generateUniqueId() {
-                    return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
+                function openConfirmModal(callback) {
+                    deleteActionCallback.value = callback;
+                    isConfirmModalOpen.value = true;
                 }
+
+                function confirmDelete() {
+                    if (deleteActionCallback.value) {
+                        deleteActionCallback.value();
+                    }
+                    isConfirmModalOpen.value = false;
+                    deleteActionCallback.value = null;
+                }
+
+                function cancelDelete() {
+                    isConfirmModalOpen.value = false;
+                    deleteActionCallback.value = null;
+                }
+
+                // --- Routing Logic ---
+                const routes = {
+                    '/': DashboardComponent,
+                    '/users': UsersComponent,
+                    '/orders': OrdersComponent,
+                    '/reports': ReportsComponent,
+                    '/invoices': InvoicesComponent,
+                };
+
+                const currentView = computed(() => {
+                    // Default to Dashboard if path is not found or is '/index.html'
+                    let view = routes[currentPath.value];
+                    if (!view && currentPath.value === '/index.html') {
+                        view = DashboardComponent;
+                        currentPath.value = '/'; // Normalize path for active menu styling
+                    } else if (!view) {
+                        // Fallback for unknown routes, could be a 404 component
+                        return { template: '<div class="text-center py-16 text-gray-500 text-2xl">Page Not Found (404)</div>' };
+                    }
+                    return view;
+                });
+
+                function navigate(path) {
+                    window.history.pushState({}, '', path);
+                    currentPath.value = path;
+                }
+
+                // Listen for browser back/forward buttons
+                onMounted(() => {
+                    window.addEventListener('popstate', () => {
+                        currentPath.value = window.location.pathname;
+                    });
+                });
 
                 // --- Profile Dropdown Actions ---
                 function toggleProfileDropdown() {
@@ -619,356 +1091,13 @@
                 function signOut() { console.log('Sign Out clicked'); isProfileDropdownOpen.value = false; }
                 function settings() { console.log('Settings clicked'); isProfileDropdownOpen.value = false; }
 
-
-                // --- API Fetch Functions ---
-
-                // Fetch Ads Data from OpenSheet (external)
-                async function fetchAdsData() {
-                    loading_ads_data.value = true;
-                    ads_data_error.value = null;
-                    try {
-                        const response = await fetch('https://opensheet.elk.sh/11qE_Bl0vm4viCfvvPKQDh6zMHWJZZNoXqWN-fvaDb50/sheet1');
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        const data = await response.json();
-                        ads_data.value = data;
-                    } catch (error) {
-                        console.error("Error fetching ads data:", error);
-                        ads_data_error.value = "Failed to load ads data. Please check the sheet URL or your network connection.";
-                    } finally {
-                        loading_ads_data.value = false;
-                    }
-                }
-
-                // Fetch Users from D1
-                async function fetchUsers() {
-                    loading_users.value = true;
-                    users_error.value = null;
-                    try {
-                        const response = await fetch(`${API_BASE_URL}/users`);
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to fetch users');
-                        }
-                        const data = await response.json();
-                        users_table.splice(0, users_table.length, ...data); // Replace all items
-                    } catch (error) {
-                        console.error("Error fetching users:", error);
-                        users_error.value = `Error: ${error.message}`;
-                    } finally {
-                        loading_users.value = false;
-                    }
-                }
-
-                // Fetch Ads Orders from D1
-                async function fetchOrders() {
-                    loading_orders.value = true;
-                    orders_error.value = null;
-                    try {
-                        const response = await fetch(`${API_BASE_URL}/ads-orders`);
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to fetch ads orders');
-                        }
-                        const data = await response.json();
-                        ads_order_table.splice(0, ads_order_table.length, ...data);
-                    } catch (error) {
-                        console.error("Error fetching ads orders:", error);
-                        orders_error.value = `Error: ${error.message}`;
-                    } finally {
-                        loading_orders.value = false;
-                    }
-                }
-
-                // Fetch Exchange Rates from KV
-                async function fetchExchangeRates() {
-                    loading_exchange_rates.value = true;
-                    exchange_rates_error.value = null;
-                    try {
-                        const response = await fetch(`${API_BASE_URL}/ads-exchange-rates`);
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to fetch exchange rates');
-                        }
-                        const data = await response.json();
-                        ads_exchange_rate_table.splice(0, ads_exchange_rate_table.length, ...data);
-                    } catch (error) {
-                        console.error("Error fetching exchange rates:", error);
-                        exchange_rates_error.value = `Error: ${error.message}`;
-                    } finally {
-                        loading_exchange_rates.value = false;
-                    }
-                }
-
-                // Fetch Report Sync Key-Value from KV
-                async function fetchReportSyncData() {
-                    loading_report_sync.value = true;
-                    report_sync_error.value = null;
-                    try {
-                        const response = await fetch(`${API_BASE_URL}/ads-report-sync-key-value`);
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to fetch report sync data');
-                        }
-                        const data = await response.json();
-                        Object.assign(ads_report_sync_key_value, data); // Update reactive object
-                    } catch (error) {
-                        console.error("Error fetching report sync data:", error);
-                        report_sync_error.value = `Error: ${error.message}`;
-                    } finally {
-                        loading_report_sync.value = false;
-                    }
-                }
-
-                // Fetch Invoices from D1
-                async function fetchInvoices() {
-                    loading_invoices.value = true;
-                    invoices_error.value = null;
-                    try {
-                        const response = await fetch(`${API_BASE_URL}/invoices`);
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to fetch invoices');
-                        }
-                        const data = await response.json();
-                        ads_invoices.splice(0, ads_invoices.length, ...data);
-                    } catch (error) {
-                        console.error("Error fetching invoices:", error);
-                        invoices_error.value = `Error: ${error.message}`;
-                    } finally {
-                        loading_invoices.value = false;
-                    }
-                }
-
-                // --- User Management Functions ---
-                function openUserModal(user) {
-                    if (user) {
-                        editingUser.value = user;
-                        Object.assign(userForm, {
-                            id: user.id, created: user.created, username: user.username, email: user.email, sessions: user.sessions, password: '' // Password not pre-filled
-                        });
-                    } else {
-                        editingUser.value = null;
-                        Object.assign(userForm, {
-                            id: null, created: null, username: '', password: '', email: '', sessions: 0
-                        });
-                    }
-                    isUserModalOpen.value = true;
-                }
-
-                function closeUserModal() {
-                    isUserModalOpen.value = false;
-                    editingUser.value = null;
-                    Object.assign(userForm, {
-                        id: null, created: null, username: '', password: '', email: '', sessions: 0
-                    });
-                }
-
-                async function saveUser() {
-                    const method = editingUser.value ? 'PUT' : 'POST';
-                    const url = editingUser.value ? `${API_BASE_URL}/users/${editingUser.value.id}` : `${API_BASE_URL}/users`;
-                    try {
-                        const response = await fetch(url, {
-                            method: method,
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(userForm)
-                        });
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to save user');
-                        }
-                        await fetchUsers(); // Re-fetch users to update the table
-                        closeUserModal();
-                    } catch (error) {
-                        console.error("Error saving user:", error);
-                        users_error.value = `Error saving user: ${error.message}`;
-                    }
-                }
-
-                async function deleteUser(id) {
-                    itemToDelete.value = { type: 'users', id: id };
-                    isConfirmModalOpen.value = true;
-                }
-
-                // --- Order Management Functions ---
-                function openOrderModal(order) {
-                    if (order) {
-                        editingOrder.value = order;
-                        Object.assign(orderForm, {
-                            id: order.id, created: order.created, start_date: order.start_date, end_date: order.end_date,
-                            campaign_name: order.campaign_name, budget: order.budget, days: order.days,
-                            platform: order.platform, objective: order.objective, auction: order.auction,
-                            estimated_impression: order.estimated_impression, estimated_click: order.estimated_click,
-                            estimated_ctr: order.estimated_ctr
-                        });
-                    } else {
-                        editingOrder.value = null;
-                        Object.assign(orderForm, {
-                            id: null, created: null, start_date: '', end_date: '', campaign_name: '', budget: 0, days: 0,
-                            platform: '', objective: '', auction: '', estimated_impression: 0, estimated_click: 0, estimated_ctr: 0
-                        });
-                    }
-                    isOrderModalOpen.value = true;
-                }
-
-                function closeOrderModal() {
-                    isOrderModalOpen.value = false;
-                    editingOrder.value = null;
-                    Object.assign(orderForm, {
-                        id: null, created: null, start_date: '', end_date: '', campaign_name: '', budget: 0, days: 0,
-                        platform: '', objective: '', auction: '', estimated_impression: 0, estimated_click: 0, estimated_ctr: 0
-                    });
-                }
-
-                async function saveOrder() {
-                    // Calculate days
-                    if (orderForm.start_date && orderForm.end_date) {
-                        const startDate = new Date(orderForm.start_date);
-                        const endDate = new Date(orderForm.end_date);
-                        const diffTime = Math.abs(endDate - startDate);
-                        orderForm.days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end day
-                    } else {
-                        orderForm.days = 0;
-                    }
-
-                    const method = editingOrder.value ? 'PUT' : 'POST';
-                    const url = editingOrder.value ? `${API_BASE_URL}/ads-orders/${editingOrder.value.id}` : `${API_BASE_URL}/ads-orders`;
-                    try {
-                        const response = await fetch(url, {
-                            method: method,
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(orderForm)
-                        });
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to save ads order');
-                        }
-                        await fetchOrders(); // Re-fetch orders
-                        closeOrderModal();
-                    } catch (error) {
-                        console.error("Error saving order:", error);
-                        orders_error.value = `Error saving order: ${error.message}`;
-                    }
-                }
-
-                async function deleteOrder(id) {
-                    itemToDelete.value = { type: 'orders', id: id };
-                    isConfirmModalOpen.value = true;
-                }
-
-                // --- Invoice Management Functions ---
-                function openInvoiceModal(invoice) {
-                    if (invoice) {
-                        editingInvoice.value = invoice;
-                        Object.assign(invoiceForm, {
-                            id: invoice.id, date: invoice.date, month: invoice.month,
-                            transaction_id: invoice.transaction_id, platform: invoice.platform,
-                            attachments: invoice.attachments
-                        });
-                    } else {
-                        editingInvoice.value = null;
-                        Object.assign(invoiceForm, {
-                            id: null, date: '', month: '', transaction_id: '', platform: '', attachments: ''
-                        });
-                    }
-                    isInvoiceModalOpen.value = true;
-                }
-
-                function closeInvoiceModal() {
-                    isInvoiceModalOpen.value = false;
-                    editingInvoice.value = null;
-                    Object.assign(invoiceForm, {
-                        id: null, date: '', month: '', transaction_id: '', platform: '', attachments: ''
-                    });
-                }
-
-                async function saveInvoice() {
-                    const method = editingInvoice.value ? 'PUT' : 'POST';
-                    const url = editingInvoice.value ? `${API_BASE_URL}/invoices/${editingInvoice.value.id}` : `${API_BASE_URL}/invoices`;
-                    try {
-                        const response = await fetch(url, {
-                            method: method,
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(invoiceForm)
-                        });
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to save invoice');
-                        }
-                        await fetchInvoices(); // Re-fetch invoices
-                        closeInvoiceModal();
-                    } catch (error) {
-                        console.error("Error saving invoice:", error);
-                        invoices_error.value = `Error saving invoice: ${error.message}`;
-                    }
-                }
-
-                async function deleteInvoice(id) {
-                    itemToDelete.value = { type: 'invoices', id: id };
-                    isConfirmModalOpen.value = true;
-                }
-
-                // --- Confirmation Modal Functions ---
-                async function confirmDelete() {
-                    if (itemToDelete.value) {
-                        const { type, id } = itemToDelete.value;
-                        try {
-                            let response;
-                            if (type === 'users') {
-                                response = await fetch(`${API_BASE_URL}/users/${id}`, { method: 'DELETE' });
-                                if (!response.ok) throw new Error('Failed to delete user');
-                                await fetchUsers();
-                            } else if (type === 'orders') {
-                                response = await fetch(`${API_BASE_URL}/ads-orders/${id}`, { method: 'DELETE' });
-                                if (!response.ok) throw new Error('Failed to delete order');
-                                await fetchOrders();
-                            } else if (type === 'invoices') {
-                                response = await fetch(`${API_BASE_URL}/invoices/${id}`, { method: 'DELETE' });
-                                if (!response.ok) throw new Error('Failed to delete invoice');
-                                await fetchInvoices();
-                            }
-                            console.log(`${type} deleted:`, id);
-                        } catch (error) {
-                            console.error(`Error deleting ${type}:`, error);
-                            // Set specific error message based on type if needed
-                            if (type === 'users') users_error.value = `Error deleting user: ${error.message}`;
-                            else if (type === 'orders') orders_error.value = `Error deleting order: ${error.message}`;
-                            else if (type === 'invoices') invoices_error.value = `Error deleting invoice: ${error.message}`;
-                        }
-                    }
-                    isConfirmModalOpen.value = false;
-                    itemToDelete.value = null;
-                }
-
-                function cancelDelete() {
-                    isConfirmModalOpen.value = false;
-                    itemToDelete.value = null;
-                }
-
-                // Fetch all initial data on component mount
-                onMounted(() => {
-                    fetchAdsData();
-                    fetchUsers();
-                    fetchOrders();
-                    fetchExchangeRates();
-                    fetchReportSyncData();
-                    fetchInvoices();
-                });
-
                 return {
+                    currentPath,
                     currentView,
-                    isProfileDropdownOpen,
-                    toggleProfileDropdown,
-                    signIn, signOut, settings,
-                    users_table, ads_order_table, ads_exchange_rate_table, ads_report_sync_key_value, ads_invoices, ads_data,
-                    loading_users, users_error, loading_orders, orders_error, loading_invoices, invoices_error,
-                    loading_exchange_rates, exchange_rates_error, loading_report_sync, report_sync_error,
-                    loading_ads_data, ads_data_error,
-                    isUserModalOpen, editingUser, userForm, openUserModal, closeUserModal, saveUser, deleteUser,
-                    isOrderModalOpen, editingOrder, orderForm, openOrderModal, closeOrderModal, saveOrder, deleteOrder,
-                    isInvoiceModalOpen, editingInvoice, invoiceForm, openInvoiceModal, closeInvoiceModal, saveInvoice, deleteInvoice,
-                    isConfirmModalOpen, confirmDelete, cancelDelete
+                    navigate,
+                    isProfileDropdownOpen, toggleProfileDropdown, signIn, signOut, settings,
+                    isConfirmModalOpen, openConfirmModal, confirmDelete, cancelDelete,
+                    API_BASE_URL // Pass API_BASE_URL down to components
                 };
             }
         }).mount('#app');
