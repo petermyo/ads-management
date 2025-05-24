@@ -3,12 +3,12 @@
 // Define CORS headers. Since this function will be deployed on the same domain
 // as your frontend (e.g., ads-management.pages.dev), you can often simplify CORS.
 // However, explicitly setting the origin to your Pages domain is a good practice.
-const corsHeaders = {
-    "Access-Control-Allow-Origin": "https://ads-management.pages.dev", // IMPORTANT: Replace with your actual Cloudflare Pages domain
-    "Access-Control-Allow-Methods": "GET,HEAD,POST,PUT,DELETE,OPTIONS",
-    "Access-Control-Max-Age": "86400",
-    "Access-Control-Allow-Headers": "Content-Type", // Allow Content-Type header for POST/PUT requests
-};
+// const corsHeaders = {
+//     "Access-Control-Allow-Origin": "https://ads-management.pages.dev", // IMPORTANT: Replace with your actual Cloudflare Pages domain
+//     "Access-Control-Allow-Methods": "GET,HEAD,POST,PUT,DELETE,OPTIONS",
+//     "Access-Control-Max-Age": "86400",
+//     "Access-Control-Allow-Headers": "Content-Type", // Allow Content-Type header for POST/PUT requests
+// };
 
 
 // Handle OPTIONS requests for CORS preflight
@@ -59,6 +59,7 @@ export async function onRequest(context) {
 
     // API for Users
     if (path.startsWith("/users")) {
+        return "User API";
         // Extract ID from path if present (e.g., /users/123)
         const userId = path.split('/').pop();
 
