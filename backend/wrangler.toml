@@ -1,0 +1,21 @@
+# backend/wrangler.toml
+
+name = "my-ads-backend" # Name of your Cloudflare Worker
+main = "src/index.js"
+compatibility_date = "2024-05-24" # Use a recent date for better compatibility
+
+# D1 Database Binding
+# This connects your Worker to your D1 database.
+# The `binding` name (e.g., "DB") is how you access it in Worker code (env.DB).
+[[d1_databases]]
+binding = "DB"
+database_name = "ads_management_db" # A human-readable name for your D1 database
+database_id = "<YOUR_D1_DATABASE_ID>" # IMPORTANT: Replace with your actual D1 Database ID
+
+# KV Namespace Binding
+# This connects your Worker to your KV namespace.
+# The `binding` name (e.g., "KV_DATA") is how you access it in Worker code (env.KV_DATA).
+[[kv_namespaces]]
+binding = "KV_DATA"
+id = "<YOUR_KV_NAMESPACE_ID>" # IMPORTANT: Replace with your actual KV Namespace ID
+# preview_id = "<YOUR_KV_NAMESPACE_PREVIEW_ID>" # Optional: For local development with a separate preview KV namespace
